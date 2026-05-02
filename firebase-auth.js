@@ -19,7 +19,7 @@ provider.setCustomParameters({ prompt: 'select_account' });
 
 async function isStaff(email) {
     try {
-        const docRef = doc(db, "staf", email);
+        const docRef = doc(db, "staff", email);
         const docSnap = await getDoc(docRef);
         return docSnap.exists();
     } catch (e) {
