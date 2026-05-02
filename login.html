@@ -39,14 +39,12 @@
         <a href="index.html" class="mt-8 text-white/30 text-xs hover:text-white/60 transition-colors">← Kembali ke Home</a>
     </div>
 
-  <script type="module">
-    import { loginWithGoogle, handleRedirectResult } from './firebase-auth.js';
+<script type="module">
+    import { loginWithGoogle } from './firebase-auth.js';
 
-    // Tampilin loading dulu waktu nunggu redirect result
     const btn = document.getElementById('login-btn');
 
-    // Cek redirect result saat halaman load
-    (async () => {
+    btn.addEventListener('click', async () => {
         btn.disabled = true;
         btn.innerHTML = `
             <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -55,9 +53,7 @@
             </svg>
             Memproses...
         `;
-
-        await handleRedirectResult();
-
+        await loginWithGoogle();
         btn.disabled = false;
         btn.innerHTML = `
             <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -68,9 +64,7 @@
             </svg>
             Masuk dengan Google
         `;
-    })();
-
-    btn.addEventListener('click', loginWithGoogle);
+    });
 </script>
 </body>
 </html>
