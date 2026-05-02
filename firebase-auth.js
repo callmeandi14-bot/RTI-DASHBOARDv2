@@ -32,22 +32,22 @@ async function loginWithGoogle() {
     try {
         const result = await signInWithPopup(auth, provider);
         const email = result.user.email;
-        const allowed = await isStaff(email);
-        if (allowed) {
+        
+        alert("Login berhasil! Email: " + email);
+        
+        const docRef = doc(db, "staff", email);
+        const docSnap = await getDoc(docRef);
+        
+        alert("Ada di database: " + docSnap.exists() + "\nEmail dicari: " + email + "\nDoc ID: " + docRef.id);
+        
+        if (docSnap.exists()) {
             window.location.replace("staff-only-1.html");
         } else {
             await signOut(auth);
             window.location.replace("denied.html");
         }
     } catch (e) {
-        console.error("Login error:", e.code, e.message);
-        if (e.code === 'auth/popup-blocked') {
-            alert("Popup diblokir browser. Izinkan popup untuk site ini lalu coba lagi.");
-        } else if (e.code === 'auth/popup-closed-by-user') {
-            // User tutup popup sendiri, diam saja
-        } else {
-            alert("Login gagal: " + e.message);
-        }
+        alert("Error: " + e.code + "\n" + e.message);
     }
 }
 
