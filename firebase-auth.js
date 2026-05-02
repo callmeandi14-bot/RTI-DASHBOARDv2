@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -15,6 +15,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
 
 async function isStaff(email) {
     try {
@@ -22,69 +23,63 @@ async function isStaff(email) {
         const docSnap = await getDoc(docRef);
         return docSnap.exists();
     } catch (e) {
+        console.error("isStaff error:", e);
         return false;
     }
 }
 
-// Ganti popup → redirect (fix mobile)
 async function loginWithGoogle() {
     try {
-        await signInWithRedirect(auth, provider);
-    } catch (e) {
-        console.error(e);
-        alert("Login gagal, coba lagi.");
-    }
-}
-
-// Tangkap hasil redirect — panggil ini di login.html saat halaman load
-async function handleRedirectResult() {
-    try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-            const email = result.user.email;
-            const allowed = await isStaff(email);
-            if (!allowed) {
-                await signOut(auth);
-                window.location.href = "denied.html";
-            } else {
-                window.location.href = "staff-only-1.html";
-            }
+        const result = await signInWithPopup(auth, provider);
+        const email = result.user.email;
+        const allowed = await isStaff(email);
+        if (allowed) {
+            window.location.replace("staff-only-1.html");
+        } else {
+            await signOut(auth);
+            window.location.replace("denied.html");
         }
-        // Kalau result null = belum login, diam saja
     } catch (e) {
-        console.error(e);
-        // Jangan alert, cukup log
+        console.error("Login error:", e.code, e.message);
+        if (e.code === 'auth/popup-blocked') {
+            alert("Popup diblokir browser. Izinkan popup untuk site ini lalu coba lagi.");
+        } else if (e.code === 'auth/popup-closed-by-user') {
+            // User tutup popup sendiri, diam saja
+        } else {
+            alert("Login gagal: " + e.message);
+        }
     }
 }
 
 async function logout() {
     await signOut(auth);
-    window.location.href = "login.html";
+    window.location.replace("login.html");
 }
 
 async function guardPage() {
     return new Promise((resolve) => {
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                window.location.href = "login.html";
+                window.location.replace("login.html");
                 resolve(false);
-            } else {
-                const allowed = await isStaff(user.email);
-                if (!allowed) {
-                    window.location.href = "denied.html";
-                    resolve(false);
-                } else {
-                    const nameEl = document.getElementById('staff-name');
-                    const emailEl = document.getElementById('staff-email');
-                    const photoEl = document.getElementById('staff-photo');
-                    if (nameEl) nameEl.textContent = user.displayName;
-                    if (emailEl) emailEl.textContent = user.email;
-                    if (photoEl) photoEl.src = user.photoURL;
-                    resolve(true);
-                }
+                return;
             }
+            const allowed = await isStaff(user.email);
+            if (!allowed) {
+                await signOut(auth);
+                window.location.replace("denied.html");
+                resolve(false);
+                return;
+            }
+            const nameEl = document.getElementById('staff-name');
+            const emailEl = document.getElementById('staff-email');
+            const photoEl = document.getElementById('staff-photo');
+            if (nameEl) nameEl.textContent = user.displayName;
+            if (emailEl) emailEl.textContent = user.email;
+            if (photoEl) photoEl.src = user.photoURL;
+            resolve(true);
         });
     });
 }
 
-export { loginWithGoogle, handleRedirectResult, logout, guardPage };
+export { loginWithGoogle, logout, guardPage };
