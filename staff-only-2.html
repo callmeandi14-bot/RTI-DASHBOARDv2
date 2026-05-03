@@ -129,9 +129,20 @@
 
     <script src="script.js"></script>
     <script type="module">
-        import { guardPage, logout } from './firebase-auth.js';
-        guardPage();
-        document.getElementById('logout-btn').addEventListener('click', logout);
+    import { guardPage, logout } from './firebase-auth.js';
+    
+    // Tunggu guard selesai dulu
+    guardPage().then((allowed) => {
+        if (!allowed) return;
+        
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                logoutBtn.disabled = true;
+                await logout();
+            });
+        }
+    });
     </script>
 </body>
 </html>
