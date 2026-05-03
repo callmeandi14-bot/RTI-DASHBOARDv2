@@ -127,14 +127,12 @@
         <p class="text-center text-emerald-600 font-bold text-[10px] tracking-[0.4em]">©BY RTI OFFICIAL</p>
     </footer>
 
-    <script src="script.js"></script>
-   <script type="module">
+<script src="script.js"></script>
+<script type="module">
     import { guardPage, logout } from './firebase-auth.js';
     
-    // Tunggu guard selesai dulu
     guardPage().then((allowed) => {
         if (!allowed) return;
-        
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async () => {
@@ -143,6 +141,6 @@
             });
         }
     });
-   </script>
+</script>
 </body>
 </html>
