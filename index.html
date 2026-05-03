@@ -9,13 +9,17 @@
 </head>
 <body class="bg-white text-emerald-950 flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- LOADER -->
+    <!-- LOADER — sama persis seperti dulu -->
     <div id="loader-wrapper" class="fixed inset-0 z-[100] bg-[#030712] flex flex-col items-center justify-center">
-        <img src="logo.png" alt="Logo" class="w-24 h-24 object-contain mb-8">
-        <h1 class="text-3xl md:text-5xl font-black text-emerald-500 tracking-[0.2em] uppercase">
-            RTI DASHBOARD
-        </h1>
-        <div class="w-48 h-1 bg-emerald-500 mt-4 rounded-full"></div>
+        <div class="mb-8 animate-bounce">
+            <img src="logo.png" alt="Logo" class="w-24 h-24 object-contain">
+        </div>
+        <div class="relative overflow-hidden border-r-4 border-emerald-500 pr-2 animate-cursor">
+            <h1 class="text-3xl md:text-5xl font-black text-emerald-500 tracking-[0.2em] uppercase animate-typing">
+                RTI DASHBOARD
+            </h1>
+        </div>
+        <div class="w-0 h-1 bg-emerald-500 mt-4 shadow-[0_0_15px_#10b981] animate-line-expand"></div>
     </div>
 
     <!-- HEADER -->
@@ -99,13 +103,13 @@
     </div>
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-    <!-- HERO — disamain dengan halaman lain -->
+    <!-- HERO — difix ukurannya sama kayak halaman lain -->
     <div class="relative w-full h-[400px] overflow-hidden bg-cover bg-center bg-fixed" style="background-image: url('profil.jpg');">
         <div class="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center px-6">
             <div class="mb-4 reveal">
                 <img src="logo.png" alt="Logo RTI" class="w-16 h-16 object-contain mx-auto">
             </div>
-            <h1 id="typewriter" class="text-4xl md:text-5xl font-black text-white uppercase tracking-widest drop-shadow-2xl min-h-[50px] reveal"></h1>
+            <h1 id="typewriter" class="text-4xl md:text-5xl font-black text-white uppercase tracking-widest drop-shadow-2xl min-h-[50px]"></h1>
             <div class="w-20 h-1 bg-emerald-500 mt-4 rounded-full reveal"></div>
             <p class="text-white/80 text-sm font-semibold mt-3 max-w-sm reveal">
                 Ruang arsip digital <strong>RTI Official</strong>. Setiap progress dicatat, setiap inovasi didokumentasikan.
