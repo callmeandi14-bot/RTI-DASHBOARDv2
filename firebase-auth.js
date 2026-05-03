@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -14,8 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
 
 async function isStaff(email) {
     try {
@@ -25,29 +23,6 @@ async function isStaff(email) {
     } catch (e) {
         console.error("isStaff error:", e);
         return false;
-    }
-}
-
-async function loginWithGoogle() {
-    try {
-        const result = await signInWithPopup(auth, provider);
-        const email = result.user.email;
-        
-        alert("Login berhasil! Email: " + email);
-        
-        const docRef = doc(db, "staff", email);
-        const docSnap = await getDoc(docRef);
-        
-        alert("Ada di database: " + docSnap.exists() + "\nEmail dicari: " + email + "\nDoc ID: " + docRef.id);
-        
-        if (docSnap.exists()) {
-            window.location.replace("staff-only-1.html");
-        } else {
-            await signOut(auth);
-            window.location.replace("denied.html");
-        }
-    } catch (e) {
-        alert("Error: " + e.code + "\n" + e.message);
     }
 }
 
@@ -71,6 +46,18 @@ async function guardPage() {
                 resolve(false);
                 return;
             }
+            const nameEl = document.getElementById('staff-name');
+            const emailEl = document.getElementById('staff-email');
+            const photoEl = document.getElementById('staff-photo');
+            if (nameEl) nameEl.textContent = user.displayName;
+            if (emailEl) emailEl.textContent = user.email;
+            if (photoEl) photoEl.src = user.photoURL;
+            resolve(true);
+        });
+    });
+}
+
+export { isStaff, logout, guardPage };            }
             const nameEl = document.getElementById('staff-name');
             const emailEl = document.getElementById('staff-email');
             const photoEl = document.getElementById('staff-photo');
