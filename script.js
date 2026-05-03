@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === 5. TYPEWRITER ===
     const textElement = document.getElementById('typewriter');
-    const textToType  = "Selamat Datang";
+    const textToType  = "Selamat Datang di Dashboard RTI";
     let textIndex     = 0;
 
     if (textElement) {
