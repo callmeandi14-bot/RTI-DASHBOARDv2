@@ -64,29 +64,29 @@
         const db = getFirestore(app);
 
         window.handleCredentialResponse = async (response) => {
-            const statusMsg = document.getElementById('status-msg');
-            statusMsg.textContent = 'Memverifikasi...';
-            statusMsg.classList.remove('hidden');
+    const statusMsg = document.getElementById('status-msg');
+    statusMsg.textContent = 'Memverifikasi...';
+    statusMsg.classList.remove('hidden');
 
-            try {
-                const credential = GoogleAuthProvider.credential(response.credential);
-                const result = await signInWithCredential(auth, credential);
-                const email = result.user.email;
+    try {
+        const credential = GoogleAuthProvider.credential(response.credential);
+        const result = await signInWithCredential(auth, credential);
+        const email = result.user.email;
 
-                const docRef = doc(db, "staff", email);
-                const docSnap = await getDoc(docRef);
+        const docRef = doc(db, "staff", email);
+        const docSnap = await getDoc(docRef);
 
-                if (docSnap.exists()) {
-                    window.location.replace("staff-only-1.html");
-                } else {
-                    await signOut(auth);
-                    window.location.replace("denied.html");
-                }
-            } catch (e) {
-                statusMsg.textContent = 'Login gagal: ' + e.message;
-                statusMsg.classList.remove('hidden');
-            }
-        };
+        if (docSnap.exists()) {
+            window.location.replace("staff-only-1.html");
+        } else {
+            // Jangan signOut dulu, langsung ke denied
+            window.location.replace("denied.html");
+        }
+    } catch (e) {
+        statusMsg.textContent = 'Login gagal: ' + e.message;
+        statusMsg.classList.remove('hidden');
+    }
+};
     </script>
 </body>
 </html>
