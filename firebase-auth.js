@@ -27,8 +27,14 @@ async function isStaff(email) {
 }
 
 async function logout() {
-    await signOut(auth);
-    window.location.replace("login.html");
+    try {
+        await signOut(auth);
+        // Hapus semua state
+        window.location.replace("login.html");
+    } catch (e) {
+        console.error("Logout error:", e);
+        window.location.replace("login.html");
+    }
 }
 
 async function guardPage() {
