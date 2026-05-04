@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTI - Tebak Angka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white text-emerald-950 flex flex-col min-h-screen transition-colors duration-300">
+
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-white/10 backdrop-blur-md border-b border-white/10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center text-white">
+            <a href="minigame.html" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-bold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Kembali
+            </a>
+            <div class="text-lg font-black text-white tracking-tighter">Tebak Angka</div>
+            <button id="theme-toggle" class="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10">
+                <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-6 pt-24 pb-12">
+        <div class="w-full max-w-sm">
+
+            <!-- Header game -->
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 rounded-3xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black text-emerald-900">Tebak Angka</h1>
+                <p class="text-emerald-600/60 text-sm mt-1">Angka 1 - 100</p>
+            </div>
+
+            <!-- Game area -->
+            <div id="game-area" class="bg-emerald-50 border-2 border-emerald-100 rounded-3xl p-6 flex flex-col gap-4">
+
+                <!-- Hint bar -->
+                <div id="hint-bar" class="flex items-center gap-3 bg-white rounded-2xl p-4 border border-emerald-100">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                        <svg id="hint-icon" class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <p id="hint-text" class="text-emerald-800 font-bold text-sm">Aku punya angka rahasia. Bisa kamu tebak?</p>
+                </div>
+
+                <!-- Tebakan counter -->
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-xs font-bold text-emerald-600/60 uppercase tracking-widest">Tebakan ke</span>
+                    <span id="attempt-count" class="text-2xl font-black text-emerald-500">0</span>
+                </div>
+
+                <!-- Input -->
+                <input id="guess-input" type="number" min="1" max="100" placeholder="Masukkan angka..."
+                    class="w-full px-5 py-4 rounded-2xl border-2 border-emerald-200 bg-white text-emerald-900 font-black text-lg text-center focus:outline-none focus:border-emerald-500 transition-all">
+
+                <!-- Tombol tebak -->
+                <button id="guess-btn" onclick="makeGuess()"
+                    class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-white font-black rounded-2xl transition-all shadow-lg shadow-emerald-500/30">
+                    Tebak!
+                </button>
+
+                <!-- History tebakan -->
+                <div id="history" class="flex flex-wrap gap-2 min-h-[32px]"></div>
+
+            </div>
+
+            <!-- Result overlay -->
+            <div id="result-area" class="hidden mt-4 bg-emerald-500 rounded-3xl p-6 text-center">
+                <div class="text-4xl mb-2">🎉</div>
+                <h2 class="text-white font-black text-xl mb-1">Berhasil!</h2>
+                <p id="result-text" class="text-white/80 text-sm mb-4"></p>
+                <button onclick="resetGame()" class="bg-white text-emerald-600 font-black px-6 py-3 rounded-2xl hover:bg-emerald-50 active:scale-95 transition-all">
+                    Main Lagi
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="py-6 border-t border-emerald-100 bg-emerald-50 site-footer">
+        <p class="text-center text-emerald-600 font-bold text-[10px] tracking-[0.4em]">©BY RTI OFFICIAL</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        let gameOver = false;
+
+        function makeGuess() {
+            if (gameOver) return;
+            const input = document.getElementById('guess-input');
+            const guess = parseInt(input.value);
+
+            if (!guess || guess < 1 || guess > 100) {
+                document.getElementById('hint-text').textContent = 'Masukkan angka antara 1 sampai 100!';
+                return;
+            }
+
+            attempts++;
+            document.getElementById('attempt-count').textContent = attempts;
+
+            // Tambah history
+            const history = document.getElementById('history');
+            const chip = document.createElement('span');
+            chip.className = `px-3 py-1 rounded-full text-xs font-black ${guess < secretNumber ? 'bg-blue-100 text-blue-600' : guess > secretNumber ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'}`;
+            chip.textContent = guess;
+            history.appendChild(chip);
+
+            if (guess === secretNumber) {
+                gameOver = true;
+                document.getElementById('result-text').textContent = `Kamu menebak ${secretNumber} dalam ${attempts} kali tebakan! ${attempts <= 5 ? '🔥 Luar biasa!' : attempts <= 10 ? '👍 Bagus!' : '😅 Lumayan!'}`;
+                document.getElementById('result-area').classList.remove('hidden');
+                document.getElementById('game-area').classList.add('opacity-50');
+            } else if (guess < secretNumber) {
+                document.getElementById('hint-text').textContent = `${guess} terlalu kecil! Coba yang lebih besar.`;
+                document.getElementById('hint-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>';
+            } else {
+                document.getElementById('hint-text').textContent = `${guess} terlalu besar! Coba yang lebih kecil.`;
+                document.getElementById('hint-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>';
+            }
+
+            input.value = '';
+            input.focus();
+        }
+
+        function resetGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            gameOver = false;
+            document.getElementById('attempt-count').textContent = '0';
+            document.getElementById('hint-text').textContent = 'Aku punya angka rahasia. Bisa kamu tebak?';
+            document.getElementById('history').innerHTML = '';
+            document.getElementById('result-area').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('opacity-50');
+            document.getElementById('guess-input').value = '';
+        }
+
+        document.getElementById('guess-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') makeGuess();
+        });
+    </script>
+</body>
+</html>
