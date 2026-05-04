@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTI - Kuis Pengetahuan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white text-emerald-950 flex flex-col min-h-screen transition-colors duration-300">
+
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-white/10 backdrop-blur-md border-b border-white/10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center text-white">
+            <a href="minigame.html" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-bold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Kembali
+            </a>
+            <div class="text-lg font-black text-white tracking-tighter">Kuis Pengetahuan</div>
+            <button id="theme-toggle" class="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10">
+                <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-6 pt-24 pb-12">
+        <div class="w-full max-w-sm" id="quiz-container">
+
+            <!-- Progress -->
+            <div class="flex items-center justify-between mb-4">
+                <span id="q-counter" class="text-xs font-black text-emerald-600/60 uppercase tracking-widest">Soal 1 / 10</span>
+                <span id="score-display" class="text-xs font-black text-emerald-500 uppercase tracking-widest">Skor: 0</span>
+            </div>
+            <div class="w-full h-2 bg-emerald-100 rounded-full mb-6 overflow-hidden">
+                <div id="progress-bar" class="h-2 bg-emerald-500 rounded-full transition-all duration-500" style="width: 10%"></div>
+            </div>
+
+            <!-- Pertanyaan -->
+            <div class="bg-emerald-50 border-2 border-emerald-100 rounded-3xl p-6 mb-4">
+                <p id="question-text" class="text-emerald-900 font-black text-lg leading-relaxed text-center"></p>
+            </div>
+
+            <!-- Pilihan jawaban -->
+            <div id="options-area" class="flex flex-col gap-3"></div>
+
+            <!-- Next button -->
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full mt-4 py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-white font-black rounded-2xl transition-all shadow-lg shadow-emerald-500/30">
+                Soal Berikutnya →
+            </button>
+
+        </div>
+
+        <!-- Hasil akhir -->
+        <div id="result-container" class="hidden w-full max-w-sm text-center">
+            <div class="bg-emerald-50 border-2 border-emerald-100 rounded-3xl p-8 flex flex-col items-center gap-4">
+                <div id="result-emoji" class="text-6xl"></div>
+                <h2 class="text-2xl font-black text-emerald-900">Kuis Selesai!</h2>
+                <div class="w-24 h-24 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <span id="final-score" class="text-white font-black text-3xl"></span>
+                </div>
+                <p id="result-msg" class="text-emerald-700/70 font-bold text-sm text-center"></p>
+                <button onclick="resetQuiz()" class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-white font-black rounded-2xl transition-all">
+                    Main Lagi
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-6 border-t border-emerald-100 bg-emerald-50 site-footer">
+        <p class="text-center text-emerald-600 font-bold text-[10px] tracking-[0.4em]">©BY RTI OFFICIAL</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        const questions = [
+            { q: "Ibu kota Indonesia adalah?", options: ["Surabaya", "Bandung", "Jakarta", "Medan"], answer: 2 },
+            { q: "Planet terbesar di tata surya kita adalah?", options: ["Saturnus", "Jupiter", "Uranus", "Neptunus"], answer: 1 },
+            { q: "Berapa hasil dari 15 × 8?", options: ["100", "110", "120", "130"], answer: 2 },
+            { q: "Siapa penemu bola lampu?", options: ["Albert Einstein", "Isaac Newton", "Thomas Edison", "Nikola Tesla"], answer: 2 },
+            { q: "Benua terluas di dunia adalah?", options: ["Amerika", "Afrika", "Eropa", "Asia"], answer: 3 },
+            { q: "Bahasa pemrograman yang dibuat oleh Guido van Rossum?", options: ["Java", "Python", "Ruby", "PHP"], answer: 1 },
+            { q: "Apa simbol kimia untuk air?", options: ["O2", "CO2", "H2O", "NaCl"], answer: 2 },
+            { q: "Berapa jumlah provinsi di Indonesia (2024)?", options: ["34", "36", "37", "38"], answer: 3 },
+            { q: "Siapa presiden pertama Indonesia?", options: ["Soeharto", "Soekarno", "Habibie", "Gus Dur"], answer: 1 },
+            { q: "Mata uang Jepang adalah?", options: ["Yuan", "Won", "Yen", "Baht"], answer: 2 },
+        ];
+
+        let current = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[current];
+            document.getElementById('q-counter').textContent = `Soal ${current + 1} / ${questions.length}`;
+            document.getElementById('score-display').textContent = `Skor: ${score}`;
+            document.getElementById('progress-bar').style.width = `${((current + 1) / questions.length) * 100}%`;
+            document.getElementById('question-text').textContent = q.q;
+            document.getElementById('next-btn').classList.add('hidden');
+
+            const optionsArea = document.getElementById('options-area');
+            optionsArea.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left px-5 py-4 rounded-2xl border-2 border-emerald-100 bg-white text-emerald-900 font-bold text-sm transition-all hover:border-emerald-400 hover:bg-emerald-50 active:scale-95';
+                btn.innerHTML = `<span class="font-black text-emerald-400 mr-2">${String.fromCharCode(65+i)}.</span> ${opt}`;
+                btn.onclick = () => selectAnswer(i, btn);
+                optionsArea.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(index, btn) {
+            if (answered) return;
+            answered = true;
+            const correct = questions[current].answer;
+            const allBtns = document.getElementById('options-area').querySelectorAll('button');
+
+            allBtns.forEach((b, i) => {
+                b.disabled = true;
+                if (i === correct) {
+                    b.className = b.className.replace('border-emerald-100 bg-white text-emerald-900', 'border-emerald-500 bg-emerald-500 text-white');
+                }
+            });
+
+            if (index === correct) {
+                score++;
+                btn.className = btn.className.replace('border-emerald-100 bg-white text-emerald-900', 'border-emerald-500 bg-emerald-500 text-white');
+            } else {
+                btn.className = btn.className.replace('border-emerald-100 bg-white text-emerald-900', 'border-red-400 bg-red-50 text-red-600');
+            }
+
+            document.getElementById('score-display').textContent = `Skor: ${score}`;
+            document.getElementById('next-btn').classList.remove('hidden');
+
+            if (current === questions.length - 1) {
+                document.getElementById('next-btn').textContent = 'Lihat Hasil 🎯';
+            }
+        }
+
+        function nextQuestion() {
+            current++;
+            if (current >= questions.length) {
+                showResult();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            document.getElementById('final-score').textContent = `${score}/10`;
+
+            let emoji, msg;
+            if (score === 10) { emoji = '🏆'; msg = 'Sempurna! Kamu luar biasa!'; }
+            else if (score >= 8) { emoji = '🎉'; msg = 'Hebat! Hampir sempurna!'; }
+            else if (score >= 6) { emoji = '👍'; msg = 'Bagus! Terus belajar ya!'; }
+            else if (score >= 4) { emoji = '😊'; msg = 'Lumayan! Coba lagi bisa lebih baik!'; }
+            else { emoji = '😅'; msg = 'Jangan menyerah! Coba lagi ya!'; }
+
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-msg').textContent = msg;
+        }
+
+        function resetQuiz() {
+            current = 0;
+            score = 0;
+            answered = false;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('result-container').classList.add('hidden');
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
