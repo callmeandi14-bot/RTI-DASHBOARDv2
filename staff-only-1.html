@@ -177,10 +177,14 @@
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async () => {
-                logoutBtn.disabled = true;
-                await signOut(auth);
-                window.location.replace("login.html");
-            });
+    logoutBtn.disabled = true;
+    await signOut(auth);
+    // Reset Google Identity Services supaya bisa login ulang tanpa refresh
+    if (window.google && window.google.accounts) {
+        google.accounts.id.disableAutoSelect();
+    }
+    window.location.replace("login.html");
+});
         }
     });
             </script>
