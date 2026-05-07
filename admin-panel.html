@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTI DASHBOARD - ADMIN PANEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#050b14] text-white flex flex-col min-h-screen">
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-[#080f1e]/90 backdrop-blur-md border-b border-white/10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-black text-white tracking-tighter">RTI<span class="text-emerald-400">.PANEL</span></div>
+            <div id="admin-info" class="hidden flex items-center gap-3">
+                <img id="admin-photo" src="" class="w-8 h-8 rounded-full border-2 border-emerald-500">
+                <span id="admin-name" class="text-sm font-bold text-white/70"></span>
+            </div>
+            <button id="logout-btn" class="hidden px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl text-xs font-black hover:bg-red-500/20 transition-all">
+                Keluar
+            </button>
+        </nav>
+    </header>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="flex-grow flex items-center justify-center px-6 pt-24 pb-12">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black text-white">Admin Panel</h1>
+                <p class="text-white/40 text-sm mt-1">RTI Dashboard — Akses Terbatas</p>
+            </div>
+
+            <!-- Step 1: Google Login -->
+            <div id="step-google" class="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
+                <p class="text-white/60 text-sm text-center font-semibold">Langkah 1: Masuk dengan Google</p>
+                <script src="https://accounts.google.com/gsi/client" async defer></script>
+                <div id="g_id_onload"
+                    data-client_id="328210653829-l7f5c1emca2hpkngkll0oqjo19hlnjta.apps.googleusercontent.com"
+                    data-callback="handleGoogleLogin"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="rectangular"
+                    data-logo_alignment="left"
+                    data-width="280">
+                </div>
+                <p id="google-error" class="text-red-400 text-xs text-center hidden"></p>
+            </div>
+
+            <!-- Step 2: Password -->
+            <div id="step-password" class="hidden bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
+                <p class="text-white/60 text-sm text-center font-semibold">Langkah 2: Masukkan Password Admin</p>
+                <div class="relative">
+                    <input id="admin-password" type="password" placeholder="Password admin..."
+                        class="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm focus:outline-none focus:border-emerald-500 transition-all placeholder-white/20">
+                    <button onclick="togglePw()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+                        <svg id="pw-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <button onclick="checkPassword()"
+                    class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-white font-black rounded-2xl transition-all shadow-lg shadow-emerald-500/20">
+                    Masuk ke Panel
+                </button>
+                <p id="pw-error" class="text-red-400 text-xs text-center hidden">Password salah!</p>
+                <button onclick="backToGoogle()" class="text-white/30 text-xs hover:text-white/50 transition-colors">← Ganti akun</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL SCREEN -->
+    <div id="panel-screen" class="hidden flex-grow container mx-auto px-6 pt-28 pb-12">
+
+        <!-- Welcome -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-black text-white">Selamat datang, <span id="panel-name" class="text-emerald-400"></span> 👋</h2>
+            <p class="text-white/40 text-sm mt-1">Kelola pengaturan RTI Dashboard dari sini.</p>
+        </div>
+
+        <!-- CARDS PANEL -->
+        <div class="grid grid-cols-1 gap-4">
+
+            <!-- Card Recruitment Toggle -->
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-white font-black text-lg">Status Recruitment</h3>
+                        <p class="text-white/40 text-sm mt-1">Buka atau tutup pendaftaran staff baru</p>
+                    </div>
+                    <div id="status-badge" class="px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider">
+                        Loading...
+                    </div>
+                </div>
+
+                <!-- Toggle switch -->
+                <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div id="toggle-dot" class="w-12 h-6 rounded-full relative cursor-pointer transition-all duration-300 bg-red-500/30 border border-red-500/30" onclick="toggleRecruitment()">
+                            <div id="toggle-thumb" class="absolute top-1 left-1 w-4 h-4 bg-red-400 rounded-full transition-all duration-300 shadow-lg"></div>
+                        </div>
+                        <span id="toggle-label" class="text-white/60 font-bold text-sm">Tutup</span>
+                    </div>
+                    <div id="toggle-saving" class="hidden">
+                        <svg class="w-5 h-5 text-emerald-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <p class="text-white/20 text-xs mt-3">Perubahan akan langsung terlihat di halaman Recruitment.</p>
+            </div>
+
+            <!-- Info card -->
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <h3 class="text-white font-black mb-3">Info Panel</h3>
+                <div class="flex flex-col gap-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-white/40">Versi</span>
+                        <span class="text-white font-bold">RTI Dashboard v1.0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-white/40">Admin</span>
+                        <span id="panel-email" class="text-emerald-400 font-bold"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-white/40">Database</span>
+                        <span class="text-white font-bold">Firebase Firestore</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithCredential, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBFbXa_03QYM8DlBkDw7UMZttBMABdtdf4",
+            authDomain: "rti-dashboard-7cd8f.firebaseapp.com",
+            projectId: "rti-dashboard-7cd8f",
+            storageBucket: "rti-dashboard-7cd8f.firebasestorage.app",
+            messagingSenderId: "328210653829",
+            appId: "1:328210653829:web:2796c8a0995bfdf232bfec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const ADMIN_PASSWORD = "adminrti135";
+        const ALLOWED_ADMINS = ["da4389490@gmail.com"];
+
+        let currentUser = null;
+        let passwordVerified = false;
+
+        // Cek apakah Gmail adalah admin
+        async function isAdmin(email) {
+            return ALLOWED_ADMINS.includes(email);
+        }
+
+        // Handle Google login
+        window.handleGoogleLogin = async (response) => {
+            const googleError = document.getElementById('google-error');
+            try {
+                const credential = GoogleAuthProvider.credential(response.credential);
+                const result = await signInWithCredential(auth, credential);
+                currentUser = result.user;
+
+                const allowed = await isAdmin(currentUser.email);
+                if (!allowed) {
+                    await signOut(auth);
+                    googleError.textContent = 'Akun ini tidak memiliki akses admin!';
+                    googleError.classList.remove('hidden');
+                    currentUser = null;
+                    return;
+                }
+
+                // Lanjut ke step password
+                document.getElementById('step-google').classList.add('hidden');
+                document.getElementById('step-password').classList.remove('hidden');
+
+            } catch (e) {
+                googleError.textContent = 'Login gagal: ' + e.message;
+                googleError.classList.remove('hidden');
+            }
+        };
+
+        // Cek password
+        window.checkPassword = () => {
+            const pw = document.getElementById('admin-password').value;
+            const pwError = document.getElementById('pw-error');
+
+            if (pw === ADMIN_PASSWORD) {
+                passwordVerified = true;
+                enterPanel();
+            } else {
+                pwError.classList.remove('hidden');
+                document.getElementById('admin-password').value = '';
+                setTimeout(() => pwError.classList.add('hidden'), 3000);
+            }
+        };
+
+        // Enter pada input password
+        document.getElementById('admin-password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') window.checkPassword();
+        });
+
+        // Kembali ke Google
+        window.backToGoogle = async () => {
+            await signOut(auth);
+            currentUser = null;
+            document.getElementById('step-password').classList.add('hidden');
+            document.getElementById('step-google').classList.remove('hidden');
+        };
+
+        // Toggle show/hide password
+        window.togglePw = () => {
+            const input = document.getElementById('admin-password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        };
+
+        // Masuk ke panel
+        function enterPanel() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('panel-screen').classList.remove('hidden');
+            document.getElementById('admin-info').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+
+            document.getElementById('admin-photo').src = currentUser.photoURL || '';
+            document.getElementById('admin-name').textContent = currentUser.displayName;
+            document.getElementById('panel-name').textContent = currentUser.displayName.split(' ')[0];
+            document.getElementById('panel-email').textContent = currentUser.email;
+
+            // Listen realtime status recruitment
+            const recruitRef = doc(db, "settings", "recruitment");
+            onSnapshot(recruitRef, (snap) => {
+                if (snap.exists()) {
+                    const status = snap.data().status;
+                    updateToggleUI(status === 'open');
+                }
+            });
+        }
+
+        // Update tampilan toggle
+        function updateToggleUI(isOpen) {
+            const dot = document.getElementById('toggle-dot');
+            const thumb = document.getElementById('toggle-thumb');
+            const label = document.getElementById('toggle-label');
+            const badge = document.getElementById('status-badge');
+
+            if (isOpen) {
+                dot.className = 'w-12 h-6 rounded-full relative cursor-pointer transition-all duration-300 bg-emerald-500/40 border border-emerald-500/40';
+                thumb.className = 'absolute top-1 right-1 w-4 h-4 bg-emerald-400 rounded-full transition-all duration-300 shadow-lg';
+                label.textContent = 'Buka';
+                label.className = 'text-emerald-400 font-bold text-sm';
+                badge.textContent = 'Buka';
+                badge.className = 'px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+            } else {
+                dot.className = 'w-12 h-6 rounded-full relative cursor-pointer transition-all duration-300 bg-red-500/30 border border-red-500/30';
+                thumb.className = 'absolute top-1 left-1 w-4 h-4 bg-red-400 rounded-full transition-all duration-300 shadow-lg';
+                label.textContent = 'Tutup';
+                label.className = 'text-red-400 font-bold text-sm';
+                badge.textContent = 'Tutup';
+                badge.className = 'px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/30';
+            }
+        }
+
+        // Toggle recruitment
+        window.toggleRecruitment = async () => {
+            const saving = document.getElementById('toggle-saving');
+            saving.classList.remove('hidden');
+
+            try {
+                const recruitRef = doc(db, "settings", "recruitment");
+                const snap = await getDoc(recruitRef);
+                const current = snap.exists() ? snap.data().status : 'closed';
+                const newStatus = current === 'open' ? 'closed' : 'open';
+                await setDoc(recruitRef, { status: newStatus });
+            } catch (e) {
+                alert('Gagal update: ' + e.message);
+            } finally {
+                saving.classList.add('hidden');
+            }
+        };
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await signOut(auth);
+            currentUser = null;
+            passwordVerified = false;
+            document.getElementById('panel-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('admin-info').classList.add('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('step-password').classList.add('hidden');
+            document.getElementById('step-google').classList.remove('hidden');
+        });
+
+    </script>
+</body>
+              </html>
