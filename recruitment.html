@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -98,20 +98,18 @@
 
     <main class="flex-grow container mx-auto px-6 py-12">
 
-        <!-- STATUS + TOMBOL DAFTAR -->
+        <!-- STATUS + TOMBOL DAFTAR realtime -->
         <div class="flex flex-col items-center gap-4 mb-10 reveal">
-            <!-- Status badge -->
-            <div class="flex items-center gap-2 px-5 py-2 rounded-full bg-red-100 border-2 border-red-200">
-                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-<span class="text-emerald-600 font-black text-sm uppercase tracking-widest">Status: Buka</span>            </div>
-
-            <!-- Tombol daftar -->
-            <a href="https://forms.gle/WsusmXHLJaCpqgoe6" target="_blank"
-   class="w-full max-w-sm flex items-center justify-center gap-3 bg-emerald-500 text-white font-black py-4 px-8 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 active:scale-95 transition-all">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-    Daftar Sekarang
-            </a>
-            <p class="text-emerald-600/40 text-xs font-semibold text-center">Pantau terus update dari kami untuk pembukaan berikutnya</p>
+            <div id="status-badge" class="flex items-center gap-2 px-5 py-2 rounded-full bg-slate-100 border-2 border-slate-200">
+                <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+                <span class="text-slate-500 font-black text-sm uppercase tracking-widest">Memuat...</span>
+            </div>
+            <div id="daftar-btn-wrap" class="w-full max-w-sm">
+                <button disabled class="w-full flex items-center justify-center gap-3 bg-slate-300 text-white font-black py-4 px-8 rounded-2xl cursor-not-allowed">
+                    Memuat...
+                </button>
+            </div>
+            <p id="status-info" class="text-emerald-600/40 text-xs font-semibold text-center"></p>
         </div>
 
         <!-- JUDUL -->
@@ -123,65 +121,26 @@
         <!-- SYARAT TRAINER, ADMIN, SECURITY -->
         <div class="mb-6 reveal">
             <div class="flex items-center gap-3 mb-4">
-                <div class="flex gap-1">
+                <div class="flex gap-1 flex-wrap">
                     <span class="px-3 py-1 bg-blue-100 text-blue-600 text-[10px] font-black rounded-full uppercase tracking-wider">Trainer</span>
                     <span class="px-3 py-1 bg-purple-100 text-purple-600 text-[10px] font-black rounded-full uppercase tracking-wider">Admin</span>
                     <span class="px-3 py-1 bg-orange-100 text-orange-600 text-[10px] font-black rounded-full uppercase tracking-wider">Security</span>
                 </div>
             </div>
             <div class="bg-emerald-50 border-2 border-emerald-100 rounded-2xl p-5 flex flex-col gap-3">
-                <div class="syarat-item">
-                    <span class="syarat-num">01</span>
-                    <p>Berumur <strong>10 tahun</strong> atau lebih</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">02</span>
-                    <p>Memiliki device yang sesuai</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">03</span>
-                    <p>Minimal pandai dalam <strong>1 hal</strong> di divisi masing-masing</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">04</span>
-                    <p>Profesional dalam bekerja</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">05</span>
-                    <p>Memiliki saran atau kritik untuk game</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">06</span>
-                    <p>Pernah menjadi staff di game lain</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">07</span>
-                    <p>Tidak memiliki masalah lama</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">08</span>
-                    <p>Ikhlas dan berniat baik untuk game</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">09</span>
-                    <p>Bisa diajak wawancara</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">10</span>
-                    <p>Menerima segala hukuman karena kesalahan sendiri</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">11</span>
-                    <p>Memiliki akun <strong>Discord</strong></p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">12</span>
-                    <p>Tidak sakit hati jika ditegur</p>
-                </div>
-                <div class="syarat-item">
-                    <span class="syarat-num">13</span>
-                    <p>Berani mengkritik Owner/Developer/Atasan</p>
-                </div>
+                <div class="syarat-item"><span class="syarat-num">01</span><p>Berumur <strong>10 tahun</strong> atau lebih</p></div>
+                <div class="syarat-item"><span class="syarat-num">02</span><p>Memiliki device yang sesuai</p></div>
+                <div class="syarat-item"><span class="syarat-num">03</span><p>Minimal pandai dalam <strong>1 hal</strong> di divisi masing-masing</p></div>
+                <div class="syarat-item"><span class="syarat-num">04</span><p>Profesional dalam bekerja</p></div>
+                <div class="syarat-item"><span class="syarat-num">05</span><p>Memiliki saran atau kritik untuk game</p></div>
+                <div class="syarat-item"><span class="syarat-num">06</span><p>Pernah menjadi staff di game lain</p></div>
+                <div class="syarat-item"><span class="syarat-num">07</span><p>Tidak memiliki masalah lama</p></div>
+                <div class="syarat-item"><span class="syarat-num">08</span><p>Ikhlas dan berniat baik untuk game</p></div>
+                <div class="syarat-item"><span class="syarat-num">09</span><p>Bisa diajak wawancara</p></div>
+                <div class="syarat-item"><span class="syarat-num">10</span><p>Menerima segala hukuman karena kesalahan sendiri</p></div>
+                <div class="syarat-item"><span class="syarat-num">11</span><p>Memiliki akun <strong>Discord</strong></p></div>
+                <div class="syarat-item"><span class="syarat-num">12</span><p>Tidak sakit hati jika ditegur</p></div>
+                <div class="syarat-item"><span class="syarat-num">13</span><p>Berani mengkritik Owner/Developer/Atasan</p></div>
             </div>
         </div>
 
@@ -191,66 +150,21 @@
                 <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-black rounded-full uppercase tracking-wider">Developer</span>
             </div>
             <div class="bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-5 flex flex-col gap-3">
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">01</span>
-                    <p>Berumur <strong>14 tahun</strong> atau lebih</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">02</span>
-                    <p>Memiliki <strong>Laptop/PC</strong></p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">03</span>
-                    <p>Minimal pandai dalam <strong>1 hal</strong> di Roblox Studio</p>
-                </div>
-                <div class="syarat-item indigo warning">
-                    <span class="syarat-num red">❌</span>
-                    <p><strong>Tidak menerima</strong> developer yang bekerja di Roblox Studio Lite!</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">04</span>
-                    <p>Diutamakan menggunakan <strong>Blender</strong> (tidak wajib)</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">05</span>
-                    <p>Pemula pun tidak apa-apa</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">06</span>
-                    <p>Minimal bisa menciptakan model/script yang berguna</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">07</span>
-                    <p>Pernah menciptakan sesuatu sebelumnya</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">08</span>
-                    <p>Tidak memiliki history <strong>leak</strong></p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">09</span>
-                    <p>Ikhlas dan berniat baik untuk game</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">10</span>
-                    <p>Bisa diajak wawancara</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">11</span>
-                    <p>Menerima segala hukuman karena kesalahan sendiri</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">12</span>
-                    <p>Tidak sakit hati jika ditegur</p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">13</span>
-                    <p>Memiliki akun <strong>Discord</strong></p>
-                </div>
-                <div class="syarat-item indigo">
-                    <span class="syarat-num indigo">14</span>
-                    <p>Berani mengkritik Owner/Developer/Atasan</p>
-                </div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">01</span><p>Berumur <strong>14 tahun</strong> atau lebih</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">02</span><p>Memiliki <strong>Laptop/PC</strong></p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">03</span><p>Minimal pandai dalam <strong>1 hal</strong> di Roblox Studio</p></div>
+                <div class="syarat-item indigo warning"><span class="syarat-num red">❌</span><p><strong>Tidak menerima</strong> developer yang bekerja di Roblox Studio Lite!</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">04</span><p>Diutamakan menggunakan <strong>Blender</strong> (tidak wajib)</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">05</span><p>Pemula pun tidak apa-apa</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">06</span><p>Minimal bisa menciptakan model/script yang berguna</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">07</span><p>Pernah menciptakan sesuatu sebelumnya</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">08</span><p>Tidak memiliki history <strong>leak</strong></p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">09</span><p>Ikhlas dan berniat baik untuk game</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">10</span><p>Bisa diajak wawancara</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">11</span><p>Menerima segala hukuman karena kesalahan sendiri</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">12</span><p>Tidak sakit hati jika ditegur</p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">13</span><p>Memiliki akun <strong>Discord</strong></p></div>
+                <div class="syarat-item indigo"><span class="syarat-num indigo">14</span><p>Berani mengkritik Owner/Developer/Atasan</p></div>
             </div>
         </div>
 
@@ -291,8 +205,62 @@
     </div>
 
     <footer class="py-8 border-t border-emerald-100 bg-emerald-50 site-footer">
-        <p class="text-center text-emerald-600 font-bold text-[10px] tracking-[0.4em]">©BY RTI OFFICIAL | By Andi</p>
+        <p class="text-center text-emerald-600 font-bold text-[10px] tracking-[0.4em]">©BY RTI OFFICIAL</p>
     </footer>
+
     <script src="script.js"></script>
+
+    <!-- Realtime status dari Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const app = initializeApp({
+            apiKey: "AIzaSyBFbXa_03QYM8DlBkDw7UMZttBMABdtdf4",
+            authDomain: "rti-dashboard-7cd8f.firebaseapp.com",
+            projectId: "rti-dashboard-7cd8f",
+            storageBucket: "rti-dashboard-7cd8f.firebasestorage.app",
+            messagingSenderId: "328210653829",
+            appId: "1:328210653829:web:2796c8a0995bfdf232bfec"
+        });
+        const db = getFirestore(app);
+
+        const badge = document.getElementById('status-badge');
+        const btnWrap = document.getElementById('daftar-btn-wrap');
+        const info = document.getElementById('status-info');
+
+        onSnapshot(doc(db, "settings", "recruitment"), (snap) => {
+            const status = snap.exists() ? snap.data().status : 'closed';
+            const isOpen = status === 'open';
+
+            if (isOpen) {
+                badge.innerHTML = `
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-emerald-600 font-black text-sm uppercase tracking-widest">Status: Buka</span>`;
+                badge.className = 'flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-100 border-2 border-emerald-200';
+                btnWrap.innerHTML = `
+                    <a href="https://forms.gle/WsusmXHLJaCpqgoe6" target="_blank"
+                       class="w-full flex items-center justify-center gap-3 bg-emerald-500 text-white font-black py-4 px-8 rounded-2xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 active:scale-95 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Daftar Sekarang
+                    </a>`;
+                info.textContent = 'Recruitment sedang dibuka. Segera daftarkan dirimu!';
+                info.className = 'text-emerald-600/60 text-xs font-semibold text-center';
+            } else {
+                badge.innerHTML = `
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <span class="text-red-600 font-black text-sm uppercase tracking-widest">Status: Tutup</span>`;
+                badge.className = 'flex items-center gap-2 px-5 py-2 rounded-full bg-red-100 border-2 border-red-200';
+                btnWrap.innerHTML = `
+                    <button disabled
+                       class="w-full flex items-center justify-center gap-3 bg-red-500 text-white font-black py-4 px-8 rounded-2xl opacity-60 cursor-not-allowed">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        Pendaftaran Ditutup
+                    </button>`;
+                info.textContent = 'Pantau terus update dari kami untuk pembukaan berikutnya.';
+                info.className = 'text-red-500/40 text-xs font-semibold text-center';
+            }
+        });
+    </script>
 </body>
-                    </html>
+</html>
