@@ -344,7 +344,25 @@
             document.getElementById('step-password').classList.add('hidden');
             document.getElementById('step-google').classList.remove('hidden');
         });
+// Sidebar panel
+const panelHamburger = document.getElementById('panel-hamburger');
+const panelSidebar = document.getElementById('panel-sidebar');
+const panelOverlay = document.getElementById('panel-overlay');
 
+if (panelHamburger) {
+    panelHamburger.addEventListener('click', () => {
+        panelHamburger.classList.toggle('open');
+        panelSidebar.classList.toggle('open');
+        panelOverlay.classList.toggle('open');
+    });
+}
+if (panelOverlay) {
+    panelOverlay.addEventListener('click', () => {
+        panelHamburger.classList.remove('open');
+        panelSidebar.classList.remove('open');
+        panelOverlay.classList.remove('open');
+    });
+}
     </script>
 </body>
               </html>
