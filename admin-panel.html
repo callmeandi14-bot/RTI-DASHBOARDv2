@@ -270,24 +270,29 @@
 
         // Masuk ke panel
         function enterPanel() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('panel-screen').classList.remove('hidden');
-            document.getElementById('admin-info').classList.remove('hidden');
-            document.getElementById('logout-btn').classList.remove('hidden');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('panel-screen').classList.remove('hidden');
+    document.getElementById('admin-info').classList.remove('hidden');
+    document.getElementById('header-placeholder').classList.add('hidden');
 
-            document.getElementById('admin-photo').src = currentUser.photoURL || '';
-            document.getElementById('admin-name').textContent = currentUser.displayName;
-            document.getElementById('panel-name').textContent = currentUser.displayName.split(' ')[0];
-            document.getElementById('panel-email').textContent = currentUser.email;
+    // Ambil user dari auth langsung kalau currentUser null
+    if (!currentUser) {
+        currentUser = auth.currentUser;
+    }
 
-            // Listen realtime status recruitment
-            const recruitRef = doc(db, "settings", "recruitment");
-            onSnapshot(recruitRef, (snap) => {
-                if (snap.exists()) {
-                    const status = snap.data().status;
-                    updateToggleUI(status === 'open');
-                }
-            });
+    if (currentUser) {
+        document.getElementById('admin-photo').src = currentUser.photoURL || '';
+        document.getElementById('admin-name').textContent = currentUser.displayName || '';
+        document.getElementById('panel-name').textContent = (currentUser.displayName || 'Admin').split(' ')[0];
+        document.getElementById('panel-email').textContent = currentUser.email || '';
+    }
+
+    // Realtime status recruitment
+    const recruitRef = doc(db, "settings", "recruitment");
+    onSnapshot(recruitRef, (snap) => {
+        const status = snap.exists() ? snap.data().status : 'closed';
+        updateToggleUI(status === 'open');
+    });
         }
 
         // Update tampilan toggle
